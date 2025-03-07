@@ -1,0 +1,21 @@
+services:
+  app:
+    container_name: ouroapp
+    build:
+      context: ./app
+    ports:
+      - "3000"
+    networks:
+      - ourorede
+  proxy:
+    container_name: ouroproxy
+    build:
+      context: ./proxy
+    ports:
+      - "8080:80"
+    networks:
+      - ourorede
+networks:
+  ourorede:
+    driver: bridge
+

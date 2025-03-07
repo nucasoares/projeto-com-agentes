@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Screen Share</title>
+</head>
+<body>
+  <h1>Sender</h1>
+
+  <input type="text" placeholder="Nome da sala">
+  <div>
+    <button id="start">Start Sharing</button>
+    <button id="stop">Stop Sharing</button>
+  </div>
+  <video id="video" autoplay></video>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const worker = new Worker('worker.js');
+    const socket = io();
+    const startButton = document.getElementById('start');
+    const stopButton = document.getElementById('stop');
+    let stream = null;
+
+    
+    async function startScreenShare() {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        video: {
+          width: { max: 1024 },
+          height: { max: 768 }
+        }
+      });
+      
+      video.srcObject = stream;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = 600;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+
+      function captureAndSendFrame() {
+        worker.onmessage = ((e) => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageDataURL = canvas.toDataURL('image/webp', 0.8);
+            socket.emit('frame', imageDataURL);
+            requestAnimationFrame(captureAndSendFrame);
+        });
+      }
+      captureAndSendFrame();
+    }
+
+    function stopScreenShare() {
+      socket.off('frame');
+      video.srcObject = null;
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+
+    startButton.addEventListener('click', startScreenShare);
+    stopButton.addEventListener('click', stopScreenShare);
+  </script>
+</body>
+<style>
+  #video {
+    display: block;
+    margin: 0 auto;
+  }
+</style>
+</html>
