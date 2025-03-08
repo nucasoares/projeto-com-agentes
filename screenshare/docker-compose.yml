@@ -7,6 +7,8 @@ services:
       - "3000"
     networks:
       - ourorede
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/ourodb"
   proxy:
     container_name: ouroproxy
     build:
@@ -15,7 +17,19 @@ services:
       - "8080:80"
     networks:
       - ourorede
+  mongo:
+    container_name: ouromongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - ourorede
+    volumes:
+      - mongo_data:/data/db
 networks:
   ourorede:
     driver: bridge
+volumes:
+  mongo_data:
 

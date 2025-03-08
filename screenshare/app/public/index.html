@@ -7,7 +7,8 @@
 <body>
   <h1>Sender</h1>
 
-  <input type="text" placeholder="Nome da sala">
+  <input id="roomName" type="text" placeholder="Nome da sala">
+
   <div>
     <button id="start">Start Sharing</button>
     <button id="stop">Stop Sharing</button>
@@ -20,10 +21,25 @@
     const socket = io();
     const startButton = document.getElementById('start');
     const stopButton = document.getElementById('stop');
-    let stream = null;
 
     
+
+    let stream = null;
+    const roomNameInput = document.getElementById('roomName');
+
+    
+    
     async function startScreenShare() {
+
+      const roomName = roomNameInput.value.trim();
+      if (!roomName) {
+        alert("Digite o nome da sala!");
+        return;
+      }
+
+      console.log(roomName)
+      socket.emit('sala', {nome: roomName})
+
       stream = await navigator.mediaDevices.getDisplayMedia({
         video: {
           width: { max: 1024 },
