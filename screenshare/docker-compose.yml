@@ -27,6 +27,27 @@ services:
       - ourorede
     volumes:
       - mongo_data:/data/db
+  prometheus:
+    container_name: ouroprometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - ourorede
+  grafana:
+    container_name: ourografana
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000" 
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+    networks:
+      - ourorede
+    depends_on:
+      - prometheus
+    restart: always
 networks:
   ourorede:
     driver: bridge

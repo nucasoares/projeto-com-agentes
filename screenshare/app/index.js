@@ -3,6 +3,7 @@ import http from 'http';
 import mongoose from 'mongoose';
 import path from 'path';
 import { Server } from 'socket.io';
+import client from 'prom-client';
 
 
 const PORT = process.env.PORT;
@@ -27,6 +28,36 @@ const io = new Server(server, {
     cors: {
         origin: '*'
     }
+});
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
+
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total de requisições HTTP recebidas',
+  labelNames: ['method', 'route']
+});
+
+const processMetrics = new client.Gauge({
+  name: 'process_memory_usage_bytes',
+  help: 'Uso de memória do processo'
+});
+
+setInterval(() => {
+  processMetrics.set(process.memoryUsage().heapUsed);
+}, 5000);
+
+// Middleware para contar requisições
+app.use((req, res, next) => {
+  httpRequestCounter.labels(req.method, req.path).inc();
+  next();
+});
+
+// Endpoint para métricas
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
 });
 
 let ids = [];
