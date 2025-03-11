@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Screen Share</title>
+  <link rel="stylesheet" href="css/styles.css"> <!-- Link para o CSS -->
 </head>
 <body>
-  <h1>Sender</h1>
+  <h1>Compartilhamento de Tela</h1>
 
   <input id="roomName" type="text" placeholder="Nome da sala">
 
-  <div>
-    <button id="start">Start Sharing</button>
-    <button id="stop">Stop Sharing</button>
+  <div class="buttons">
+    <button id="start">Iniciar Compartilhamento</button>
+    <button id="stop">Parar Compartilhamento</button>
   </div>
+  
   <video id="video" autoplay></video>
 
   <script src="/socket.io/socket.io.js"></script>
@@ -21,24 +24,17 @@
     const socket = io();
     const startButton = document.getElementById('start');
     const stopButton = document.getElementById('stop');
-
-    
-
     let stream = null;
     const roomNameInput = document.getElementById('roomName');
 
-    
-    
     async function startScreenShare() {
-
       const roomName = roomNameInput.value.trim();
       if (!roomName) {
         alert("Digite o nome da sala!");
         return;
       }
 
-      console.log(roomName)
-      socket.emit('sala', {nome: roomName})
+      socket.emit('sala', { nome: roomName });
 
       stream = await navigator.mediaDevices.getDisplayMedia({
         video: {
@@ -46,7 +42,7 @@
           height: { max: 768 }
         }
       });
-      
+
       video.srcObject = stream;
 
       const canvas = document.createElement('canvas');
@@ -56,10 +52,10 @@
 
       function captureAndSendFrame() {
         worker.onmessage = ((e) => {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageDataURL = canvas.toDataURL('image/webp', 0.8);
-            socket.emit('frame', imageDataURL);
-            requestAnimationFrame(captureAndSendFrame);
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imageDataURL = canvas.toDataURL('image/webp', 0.8);
+          socket.emit('frame', imageDataURL);
+          requestAnimationFrame(captureAndSendFrame);
         });
       }
       captureAndSendFrame();
@@ -76,10 +72,4 @@
     stopButton.addEventListener('click', stopScreenShare);
   </script>
 </body>
-<style>
-  #video {
-    display: block;
-    margin: 0 auto;
-  }
-</style>
 </html>

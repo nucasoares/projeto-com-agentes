@@ -1,0 +1,86 @@
+/* Resetando estilos padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo global */
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #1e1e2e;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  /* Título */
+  h1 {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  
+  /* Input de texto */
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  /* Estilização dos botões */
+  .buttons {
+    margin: 10px 0;
+  }
+  
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+
+  #stop {
+    background-color: #f44336;
+  }
+  
+  #stop:hover {
+    background-color: #e53935; 
+  }
+  
+  /* Estilização da área de vídeo */
+  #video {
+    display: block;
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Estilização da imagem recebida */
+  #frame {
+    display: block;
+    max-width: 90%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+  }
+  

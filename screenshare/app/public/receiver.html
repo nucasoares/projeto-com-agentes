@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Receiver</title>
-  <style>
-    #frame {
-      display: block;
-      margin: 0 auto;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css"> <!-- Link para o CSS -->
 </head>
 <body>
-  <h1>Receiver</h1>
-  <img id="frame"alt="">
+  <h1>Recebendo Transmissão</h1>
+  
+  <img id="frame" alt="Imagem da transmissão ao vivo">
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
